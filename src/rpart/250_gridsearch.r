@@ -70,7 +70,7 @@ ArbolSimple  <- function( fold_test, data, param )
 ArbolesCrossValidation  <- function( data, param, qfolds, semilla )
 {
   divi  <- rep( 1, qfolds )
-  particionar( data, divi, seed=semilla )
+  particionar( data, divi, agrupa="clase_ternaria", seed=semilla )
 
   ganancias  <- mcmapply( ArbolSimple, 
                           seq(qfolds), # 1 2 3 4 5  
@@ -105,14 +105,3 @@ for( vminbucket  in  unique( as.integer(c(1,2,3,4,5,  vminsplit/10, vminsplit/5,
   E250  <- c( param_basicos,  list( "ganancia" = gan ) )
   loguear( E250 )
 }
-
-  param_basicos  <- list( "cp"= -1, 
-                          "minsplit"= 10,
-                          "minbucket"= 2,
-                          "maxdepth"= 5 )
-                          
-                          
-
-
-
-

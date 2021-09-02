@@ -76,7 +76,7 @@ dataset  <- fread("./datasetsOri/paquete_premium_202009.csv")
 #inicializo la tabla donde voy a dejar los resultados
 tb_resultados  <- data.table( maxdepth=integer(), ganancia1=numeric(), ganancia5=numeric()  )
 
-for(  vmaxdepth in  c(4,5,6,7,6,9,10,11) )
+for(  vmaxdepth in  c(4,5,6,7,8,9,10,11) )
 {
   param_basicos  <- list( "cp"=-1, "minsplit"=20, "minbucket"=7,  "maxdepth"= vmaxdepth )
 

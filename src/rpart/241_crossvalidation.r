@@ -47,7 +47,7 @@ ArbolSimple  <- function( fold_test, data, param )
 ArbolesCrossValidation  <- function( data, param, qfolds, semilla )
 {
   divi  <- rep( 1, qfolds )
-  particionar( data, divi, seed=semilla )
+  particionar( data, divi, agrupa="clase_ternaria", seed=semilla )
 
   ganancias  <- mcmapply( ArbolSimple, 
                           seq(qfolds), # 1 2 3 4 5  
@@ -67,7 +67,7 @@ dataset  <- fread("./datasetsOri/paquete_premium_202009.csv")
 tb_resultados  <- data.table( maxdepth=integer(), ganancia=numeric() )
 
 
-for(  vmaxdepth in  c(4,5,6,7,6,9,10,11) )
+for(  vmaxdepth in  c(4,5,6,7,8,9,10,11) )
 {
   param_basicos  <- list( "cp"=-1, "maxdepth"= vmaxdepth )
 
