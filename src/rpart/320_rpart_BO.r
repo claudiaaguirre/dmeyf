@@ -15,18 +15,19 @@ require("parallel")
 
 #paquetes necesarios para la Bayesian Optimization
 require("DiceKriging")
-require("mlrMBO")
-
+require("mlrMBO") #PAQUETE DE ESTIMACIÓN BAYESIANA
 
 #para poder usarlo en la PC y en la nube
 switch ( Sys.info()[['sysname']],
          Windows = { directory.root   <-  "M:\\" },   #Microsoft Windows
-         Darwin  = { directory.root   <-  "~/dm/" },  #Apple MAC
-         Linux   = { directory.root   <-  "~/buckets/b1/crudo/" }  #Entorno Google Cloud
+         Darwin  = { directory.root   <-  "/Users/claudia/DMenEyF/" },  #Apple MAC
+         Linux   = { directory.root   <-  "/buckets/b1/crudo/" }  #Entorno Google Cloud
        )
+
+directory.root
 #defino la carpeta donde trabajo
 setwd( directory.root )
-
+#setwd("/Users/claudia/DMenEyF/") 
 
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
 
@@ -35,18 +36,24 @@ karch_generacion  <- "./datasetsOri/paquete_premium_202009.csv"
 karch_aplicacion  <- "./datasetsOri/paquete_premium_202011.csv"
 kBO_iter    <-  200   #cantidad de iteraciones de la Optimizacion Bayesiana
 
+#library ParamHelpers
+
+# minsplit: The minimum number of observations in a node for which the routine will even try to compute a split. 
+#The default is 20. This parameter can save computation time, since smaller nodes are almost always pruned away by cross- validation.
+
+# minbucket: The minimum number of observations in a terminal node. This defaults to minsplit/3.
+
+# cp: The threshold complexity parameter.
 hs  <- makeParamSet(
           makeNumericParam("cp"       , lower= -1   , upper=    0.1),
           makeIntegerParam("minsplit" , lower=  1L  , upper= 8000L),  #la letra L al final significa ENTERO
           makeIntegerParam("minbucket", lower=  1L  , upper= 2000L),
           makeIntegerParam("maxdepth" , lower=  3L  , upper=   20L),
-          forbidden = quote( minbucket > 0.5*minsplit ) )
+          forbidden = quote( minbucket > 0.5*minsplit ) ) #indica que hay zonas prohibidas...un hijo no puede ser mas grande que el padre
 
-
-ksemilla_azar  <- 102191
+ksemilla_azar  <- 999979
 #------------------------------------------------------------------------------
 #Funcion que lleva el registro de los experimentos
-
 get_experimento  <- function()
 {
   if( !file.exists( "./maestro.yaml" ) )  cat( file="./maestro.yaml", "experimento: 1000" )
@@ -64,7 +71,6 @@ get_experimento  <- function()
 #------------------------------------------------------------------------------
 #graba a un archivo los componentes de lista
 #para el primer registro, escribe antes los titulos
-
 loguear  <- function( reg, arch=NA, folder="./work/", ext=".txt", verbose=TRUE )
 {
   archivo  <- arch
@@ -136,7 +142,6 @@ ArbolesCrossValidation  <- function( data, param, qfolds, pagrupa, semilla )
 #------------------------------------------------------------------------------
 #esta funcion solo puede recibir los parametros que se estan optimizando
 #el resto de los parametros se pasan como variables globales
-
 EstimarGanancia  <- function( x )
 {
    GLOBAL_iteracion  <<-  GLOBAL_iteracion + 1
@@ -167,13 +172,11 @@ EstimarGanancia  <- function( x )
              file= paste0(kkaggle, GLOBAL_iteracion, ".csv" ),
              sep=  "," )
    }
-
    #logueo 
    xx  <- x
    xx$xval_folds  <-  xval_folds
    xx$ganancia  <- ganancia
    loguear( xx,  arch= klog )
-
 
    return( ganancia )
 }
@@ -200,8 +203,47 @@ if( file.exists(klog) )
 
 
 #cargo los datasets
-dataset  <- fread(karch_generacion)   #donde entreno
-dapply  <- fread(karch_aplicacion)    #donde aplico el modelo
+dataset_o  <- fread(karch_generacion)   #donde entreno
+dapply_o  <- fread(karch_aplicacion)    #donde aplico el modelo
+
+# Remover variables que cambiaron su distribución:----------
+campos_buenos  <- setdiff(  colnames(dataset_o),  c("numero_de_cliente","foto_mes","clase_ternaria",
+                                                    "internet", 
+                                                    "mactivos_margen", 
+                                                    "mpasivos_margen", 
+                                                    "tpaquete1", 
+                                                    "mcuenta_corriente", 
+                                                    "mcaja_ahorro_dolares", 
+                                                    "mcuentas_saldo", 
+                                                    "minversion1_pesos", 
+                                                    "mpayroll", 
+                                                    "mpagodeservicios", 
+                                                    "ccajeros_propios_descuentos", 
+                                                    "mcajeros_propios_descuentos", 
+                                                    "ctarjeta_visa_descuentos", 
+                                                    "mtarjeta_visa_descuentos", 
+                                                    "ctarjeta_master_descuentos", 
+                                                    "mtarjeta_master_descuentos", 
+                                                    "mforex_buy", 
+                                                    "ccheques_depositados", 
+                                                    "matm_other", 
+                                                    "tmobile_app", 
+                                                    "cmobile_app_trx", 
+                                                    "Master_Finiciomora", 
+                                                    "Master_mconsumosdolares", 
+                                                    "Master_madelantodolares", 
+                                                    "Master_cadelantosefectivo", 
+                                                    "Visa_mfinanciacion_limite", 
+                                                    "Visa_Finiciomora", 
+                                                    "Visa_msaldodolares", 
+                                                    "Visa_mconsumosdolares", 
+                                                    "Visa_mpagado", 
+                                                    "Visa_mpagosdolares" ) )
+
+#https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/get
+dataset = dataset_o[, mget(campos_buenos)]
+dapply = dapply_o [, mget(campos_buenos)]
+#-----------------------------------------------------------
 
 #Aqui comienza la configuracion de la Bayesian Optimization
 
