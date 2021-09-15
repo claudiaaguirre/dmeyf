@@ -24,7 +24,6 @@ switch ( Sys.info()[['sysname']],
          Linux   = { directory.root   <-  "/buckets/b1/crudo/" }  #Entorno Google Cloud
        )
 
-directory.root
 #defino la carpeta donde trabajo
 setwd( directory.root )
 #setwd("/Users/claudia/DMenEyF/") 
@@ -201,44 +200,23 @@ if( file.exists(klog) )
  GLOBAL_ganancia_max  <-  tabla_log[ , max(ganancia) ]
 }
 
-
+#-----------------------------------------------------------
 #cargo los datasets
 dataset_o  <- fread(karch_generacion)   #donde entreno
 dapply_o  <- fread(karch_aplicacion)    #donde aplico el modelo
 
 # Remover variables que cambiaron su distribución:----------
-campos_buenos  <- setdiff(  colnames(dataset_o),  c("numero_de_cliente","foto_mes","clase_ternaria",
+campos_buenos  <- setdiff(  colnames(dataset_o),  c("foto_mes", 
                                                     "internet", 
                                                     "mactivos_margen", 
                                                     "mpasivos_margen", 
                                                     "tpaquete1", 
-                                                    "mcuenta_corriente", 
-                                                    "mcaja_ahorro_dolares", 
-                                                    "mcuentas_saldo", 
-                                                    "minversion1_pesos", 
-                                                    "mpayroll", 
-                                                    "mpagodeservicios", 
-                                                    "ccajeros_propios_descuentos", 
                                                     "mcajeros_propios_descuentos", 
-                                                    "ctarjeta_visa_descuentos", 
                                                     "mtarjeta_visa_descuentos", 
-                                                    "ctarjeta_master_descuentos", 
                                                     "mtarjeta_master_descuentos", 
-                                                    "mforex_buy", 
-                                                    "ccheques_depositados", 
-                                                    "matm_other", 
-                                                    "tmobile_app", 
+                                                    "matm_other","tmobile_app",
                                                     "cmobile_app_trx", 
-                                                    "Master_Finiciomora", 
-                                                    "Master_mconsumosdolares", 
-                                                    "Master_madelantodolares", 
-                                                    "Master_cadelantosefectivo", 
-                                                    "Visa_mfinanciacion_limite", 
-                                                    "Visa_Finiciomora", 
-                                                    "Visa_msaldodolares", 
-                                                    "Visa_mconsumosdolares", 
-                                                    "Visa_mpagado", 
-                                                    "Visa_mpagosdolares" ) )
+                                                    "Master_Finiciomora") )
 
 #https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/get
 dataset = dataset_o[, mget(campos_buenos)]
@@ -269,6 +247,7 @@ surr.km  <-  makeLearner("regr.km", predict.type= "se", covtype= "matern3_2", co
 
 #inicio la optimizacion bayesiana
 if(!file.exists(kbayesiana)) {
+  print("entra")
   run  <- mbo(obj.fun, learner = surr.km, control = ctrl)
 } else  run  <- mboContinue( kbayesiana )   #retomo en caso que ya exista
 

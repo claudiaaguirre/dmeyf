@@ -6,7 +6,9 @@ require("data.table")
 require("rpart")
 
 #Aqui se debe poner la carpeta de la computadora local
-setwd("M:\\")  #Establezco el Working Directory
+#setwd("M:\\")  #Establezco el Working Directory
+setwd("/Users/claudia/DMenEyF/")  #Establezco el Working Directory
+getwd()
 
 #cargo los datos
 dtrain  <- fread("./datasetsOri/paquete_premium_202009.csv")

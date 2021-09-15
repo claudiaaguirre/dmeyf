@@ -6,17 +6,16 @@ require("data.table")
 
 
 #cargo los datasets que voy a comparar
-setwd("~/buckets/b1/crudoB/" )  #establezco la carpeta donde voy a trabajar
+setwd("/Users/claudia/DMenEyF/") #establezco la carpeta donde voy a trabajar
 
 
 datasetA  <- fread( "./datasetsOri/paquete_premium_202009.csv" )
 datasetB  <- fread( "./datasetsOri/paquete_premium_202011.csv" )
 
 #los campos sobre los que voy a trabajar
-campos_buenos <-  setdiff(  colnames( datasetA),  c("numero_de_cliente","foto_mes","clase_ternaria" ) )
+campos_buenos <-  setdiff(  colnames( datasetA),  c("numero_de_cliente","foto_mes","clase_ternaria") )
 
-
-pdf("./work/data_delta_01.pdf")
+pdf("./data_delta_01.pdf")
 
 for( campo in  campos_buenos )
 {
@@ -32,8 +31,7 @@ for( campo in  campos_buenos )
 
   a1  <- qdrift[[1]]
   a2  <- qdrift[[2]]
-
-
+  
   plot(drift, 
        col="blue",
        main= paste0("DELTA    ",  campo),

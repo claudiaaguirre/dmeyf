@@ -8,7 +8,7 @@ require("data.table")
 require("rpart")
 
 #Aqui se debe poner la carpeta de la computadora local
-setwd("~/buckets/b1/crudoB/")  #Establezco el Working Directory
+setwd("/Users/claudia/DMenEyF/")  #Establezco el Working Directory
 
 #cargo los datos donde entreno
 dtrain  <- fread("./datasetsOri/paquete_premium_202009.csv")
@@ -20,12 +20,12 @@ dapply  <- fread("./datasetsOri/paquete_premium_202011.csv")
 #Establezco cuales son los campos que puedo usar para la prediccion
 campos_buenos  <- setdiff(  colnames(dtrain) ,  c("clase_ternaria") )
 
-parametros  <-  list( "cp"=-1, "minsplit"=900,  "minbucket"=440, "maxdepth"=5 )
+parametros  <-  list( "cp"=-1, "minsplit"=2984,  "minbucket"=440, "maxdepth"=5 )
 
-num_trees         <-  10    #voy a generar 10 arboles
+num_trees         <-  50    #voy a generar 10 arboles
 feature_fraction  <-   0.5  #entreno cada arbol con solo 50% de las variables variables
 
-set.seed(102191) #Establezco la semilla aleatoria
+set.seed(999979) #Establezco la semilla aleatoria
 
 #inicializo en CERO el vector de las probabilidades en dapply
 #Aqui es donde voy acumulando, sumando, las probabilidades
@@ -65,5 +65,5 @@ entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_clien
 
 #genero el archivo para Kaggle
 fwrite( entrega, 
-        file="./kaggle/arboles_azarosos_001.csv", 
+        file="./kaggle/arboles_azarosos_002.csv", 
         sep="," )

@@ -6,16 +6,22 @@ require("data.table")
 
 
 #Aqui comienza el programa
-setwd("~/buckets/b1/crudoB/")
+setwd("/Users/claudia/DMenEyF/")
 
 datasetA  <- fread( "./datasetsOri/paquete_premium_202009.csv" )
 datasetB  <- fread( "./datasetsOri/paquete_premium_202011.csv" )
 
 
+nrow(datasetA[datasetA$internet == 0])
+nrow(datasetA[datasetA$internet == 1])
+nrow(datasetB[datasetB$internet == 0])
+nrow(datasetB[datasetB$internet == 1])
+
+
 campos_buenos  <- setdiff(  colnames( datasetA),  c("numero_de_cliente","foto_mes","clase_ternaria" ) )
 
 
-pdf("./work/densidades_01.pdf")
+pdf("./densidades_01.pdf")
 for( campo in  campos_buenos )
 {
   cat( campo, "  " )

@@ -8,7 +8,7 @@ require("data.table")
 require("parallel")
 require("rpart")
 
-setwd( "M:\\" )
+setwd("/Users/claudia/DMenEyF/") 
 
 ksemillas  <- c(102191, 200177, 410551, 552581, 892237) #reemplazar por las propias semillas
 

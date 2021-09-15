@@ -18,9 +18,10 @@ require("parallel")
 require("DiceKriging")
 require("mlrMBO")
 
+#require('Rcpp') 
 
 #defino la carpeta donde trabajo
-setwd( "~/buckets/b1/crudoB/"  )
+setwd("/Users/claudia/DMenEyF/") 
 
 
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
@@ -30,13 +31,15 @@ karch_generacion  <- "./datasetsOri/paquete_premium_202009.csv"
 karch_aplicacion  <- "./datasetsOri/paquete_premium_202011.csv"
 kBO_iter    <-  150   #cantidad de iteraciones de la Optimizacion Bayesiana
 
-hs  <- makeParamSet(
-          makeIntegerParam("num.trees" ,        lower=  2L  , upper=  500L),  #la letra L al final significa ENTERO
-          makeIntegerParam("max.depth",         lower=  0L  , upper=   20L),  # 0 significa profundidad infinita
-          makeIntegerParam("min.node.size" ,    lower=  1L  , upper=  500L),
-          makeIntegerParam("mtry" ,             lower=  2L  , upper=   50L))
 
-ksemilla_azar  <- 102191  #Aqui poner la propia semilla
+
+hs  <- ParamHelpers::makeParamSet(
+  ParamHelpers::makeIntegerParam("num.trees" ,        lower=  2L  , upper=  500L),  #la letra L al final significa ENTERO
+  ParamHelpers::makeIntegerParam("max.depth",         lower=  0L  , upper=   20L),  # 0 significa profundidad infinita
+  ParamHelpers::makeIntegerParam("min.node.size" ,    lower=  1L  , upper=  500L),
+  ParamHelpers::makeIntegerParam("mtry" ,             lower=  2L  , upper=   50L))
+
+ksemilla_azar  <- 999979  #Aqui poner la propia semilla
 #------------------------------------------------------------------------------
 #Funcion que lleva el registro de los experimentos
 
@@ -206,22 +209,40 @@ if( file.exists(klog) )
  GLOBAL_ganancia_max  <-  tabla_log[ , max(ganancia) ]
 }
 
+#-----------------------------------------------------------
+# Remover variables que cambiaron su distribución:----------
 
 #cargo el datset donde voy a entrenar
-dataset  <- fread(karch_generacion, stringsAsFactors= TRUE)   #donde entreno
+dataset_o  <- fread(karch_generacion, stringsAsFactors= TRUE)   #donde entreno
 
+campos_buenos  <- setdiff(  colnames(dataset_o),  c("foto_mes", 
+                                                    "internet", 
+                                                    "mactivos_margen", 
+                                                    "mpasivos_margen", 
+                                                    "tpaquete1", 
+                                                    "mcajeros_propios_descuentos", 
+                                                    "mtarjeta_visa_descuentos", 
+                                                    "mtarjeta_master_descuentos", 
+                                                    "matm_other","tmobile_app",
+                                                    "cmobile_app_trx", 
+                                                    "Master_Finiciomora") )
+#-----------------------------------------------------------
+dataset = dataset_o[, mget(campos_buenos)]
+#-----------------------------------------------------------
 dataset[ , clase_binaria := as.factor(ifelse( clase_ternaria=="BAJA+2", "POS", "NEG" )) ]
 dataset[ , clase_ternaria := NULL ]  #elimino la clase_ternaria, ya no la necesito
 #imputo los nulos, ya que ranger no acepta nulos
 #Leo Breiman, ¿por que le temias a los nulos?
 dataset  <- na.roughfix( dataset )
 
-
 #cargo el dataset donde voy a aplicar el modelo, que NO tiene clase
-dapply   <- fread(karch_aplicacion, stringsAsFactors= TRUE)   #donde aplico el modelo
+dapply_o   <- fread(karch_aplicacion, stringsAsFactors= TRUE)   #donde aplico el modelo
+#-----------------------------------------------------------
+dapply = dapply_o[, mget(campos_buenos)]
+#-----------------------------------------------------------
+
 dapply[ , clase_ternaria := NULL ]  #Elimino esta columna que esta toda en NA
 dapply  <- na.roughfix( dapply )
-
 
 
 #Aqui comienza la configuracion de la Bayesian Optimization
@@ -246,8 +267,11 @@ ctrl  <- setMBOControlInfill(ctrl, crit= makeMBOInfillCritEI())
 
 surr.km  <-  makeLearner("regr.km", predict.type= "se", covtype= "matern3_2", control= list(trace= TRUE))
 
+
+
 #inicio la optimizacion bayesiana
 if(!file.exists(kbayesiana)) {
+  print("entra")
   run  <- mbo(obj.fun, learner = surr.km, control = ctrl)
 } else  run  <- mboContinue( kbayesiana )   #retomo en caso que ya exista
 

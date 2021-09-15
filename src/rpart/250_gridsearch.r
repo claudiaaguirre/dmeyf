@@ -9,12 +9,10 @@ require("rlist")
 require("parallel")
 require("rpart")
 
-setwd( "M:\\" )
-
-ksemillas  <- c(102191, 200177, 410551, 552581, 892237) #reemplazar por las propias semillas
+setwd("/Users/claudia/DMenEyF/") 
+ksemillas  <- c(999979, 999961, 999959, 999953, 999931) #reemplazar por las propias semillas
 
 #------------------------------------------------------------------------------
-
 loguear  <- function( reg, arch=NA, folder="./work/", ext=".txt", verbose=TRUE )
 {
   archivo  <- arch
@@ -89,7 +87,7 @@ dataset  <- fread("./datasetsOri/paquete_premium_202009.csv")
 
 for( vcp in c( -1, 0) ) 
 for( vmaxdepth in  c(4,5,6,7,8,10,12,14,16) )
-for( vminsplit in  c(2,4, 8, 10, 15, 20, 30, 50, 100, 150, 200, 300, 400 ) )
+for( vminsplit in  c(20, 30, 50, 100, 150, 200, 300, 400 ) )
 for( vminbucket  in  unique( as.integer(c(1,2,3,4,5,  vminsplit/10, vminsplit/5, vminsplit/3, vminsplit/2 )) ) )
 {
   param_basicos  <- list( "cp"= vcp, 
