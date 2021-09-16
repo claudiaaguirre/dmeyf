@@ -72,5 +72,5 @@ entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_clien
 
 #genero el archivo para Kaggle
 fwrite( entrega, 
-        file= "./kaggle/lightgbm_con_los_pibes_no.csv",
+        file= "./kaggle/lightgbm_con_los_pibes_NO.csv",
         sep=  "," )
