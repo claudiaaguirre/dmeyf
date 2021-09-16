@@ -42,7 +42,6 @@ hs  <- ParamHelpers::makeParamSet(
 ksemilla_azar  <- 999979  #Aqui poner la propia semilla
 #------------------------------------------------------------------------------
 #Funcion que lleva el registro de los experimentos
-
 get_experimento  <- function()
 {
   if( !file.exists( "./maestro.yaml" ) )  cat( file="./maestro.yaml", "experimento: 1000" )
@@ -94,13 +93,10 @@ particionar  <- function( data, division, agrupa="", campo="fold", start=1, seed
            by= agrupa ]
 }
 #------------------------------------------------------------------------------
-
 ranger_Simple  <- function( fold_test, pdata, param )
 {
-  #genero el modelo
-
   set.seed(ksemilla_azar)
-
+  
   modelo  <- ranger( formula= "clase_binaria ~ .",
                      data=  pdata[ fold!= fold_test], 
                      probability=   TRUE,  #para que devuelva las probabilidades
@@ -119,7 +115,6 @@ ranger_Simple  <- function( fold_test, pdata, param )
   return( ganancia_testing )
 }
 #------------------------------------------------------------------------------
-
 ranger_CrossValidation  <- function( data, param, pcampos_buenos, qfolds, pagrupa, semilla )
 {
   divi  <- rep( 1, qfolds )
@@ -188,8 +183,8 @@ EstimarGanancia_ranger  <- function( x )
 
    return( ganancia )
 }
-#------------------------------------------------------------------------------
-#Aqui empieza el programa
+
+################# Comienzo del programa ######################
 
 if( is.na(kexperimento ) )   kexperimento <- get_experimento()  #creo el experimento
 
@@ -208,7 +203,6 @@ if( file.exists(klog) )
  GLOBAL_iteracion  <- nrow( tabla_log ) -1
  GLOBAL_ganancia_max  <-  tabla_log[ , max(ganancia) ]
 }
-
 #-----------------------------------------------------------
 # Remover variables que cambiaron su distribución:----------
 
@@ -226,27 +220,26 @@ campos_buenos  <- setdiff(  colnames(dataset_o),  c("foto_mes",
                                                     "matm_other","tmobile_app",
                                                     "cmobile_app_trx", 
                                                     "Master_Finiciomora") )
-#-----------------------------------------------------------
 dataset = dataset_o[, mget(campos_buenos)]
-#-----------------------------------------------------------
+
 dataset[ , clase_binaria := as.factor(ifelse( clase_ternaria=="BAJA+2", "POS", "NEG" )) ]
 dataset[ , clase_ternaria := NULL ]  #elimino la clase_ternaria, ya no la necesito
 #imputo los nulos, ya que ranger no acepta nulos
 #Leo Breiman, ¿por que le temias a los nulos?
 dataset  <- na.roughfix( dataset )
-
+#-----------------------------------------------------------
 #cargo el dataset donde voy a aplicar el modelo, que NO tiene clase
 dapply_o   <- fread(karch_aplicacion, stringsAsFactors= TRUE)   #donde aplico el modelo
-#-----------------------------------------------------------
 dapply = dapply_o[, mget(campos_buenos)]
-#-----------------------------------------------------------
-
+#imputo los nulos, ya que ranger no acepta nulos
 dapply[ , clase_ternaria := NULL ]  #Elimino esta columna que esta toda en NA
 dapply  <- na.roughfix( dapply )
+#-----------------------------------------------------------
 
 
 #Aqui comienza la configuracion de la Bayesian Optimization
 
+#configureMlr: Configures the behavior of the package.
 configureMlr( show.learner.output = FALSE)
 
 funcion_optimizar  <- EstimarGanancia_ranger

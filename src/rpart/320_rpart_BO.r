@@ -146,7 +146,8 @@ EstimarGanancia  <- function( x )
    GLOBAL_iteracion  <<-  GLOBAL_iteracion + 1
 
    xval_folds  <- 5
-   ganancia  <-  ArbolesCrossValidation( dataset, param=x, qfolds= xval_folds, pagrupa="clase_ternaria", semilla=ksemilla_azar )
+   ganancia  <-  ArbolesCrossValidation( dataset, param=x, qfolds= xval_folds, 
+                                         pagrupa="clase_ternaria", semilla=ksemilla_azar )
 
    #si tengo una ganancia superadora, genero el archivo para Kaggle
    if(  ganancia > GLOBAL_ganancia_max )
@@ -179,8 +180,8 @@ EstimarGanancia  <- function( x )
 
    return( ganancia )
 }
-#------------------------------------------------------------------------------
-#Aqui empieza el programa
+
+################# Comienzo del programa ######################
 
 if( is.na(kexperimento ) )   kexperimento <- get_experimento()  #creo el experimento
 
@@ -199,7 +200,6 @@ if( file.exists(klog) )
  GLOBAL_iteracion  <- nrow( tabla_log ) -1
  GLOBAL_ganancia_max  <-  tabla_log[ , max(ganancia) ]
 }
-
 #-----------------------------------------------------------
 #cargo los datasets
 dataset_o  <- fread(karch_generacion)   #donde entreno
@@ -218,7 +218,6 @@ campos_buenos  <- setdiff(  colnames(dataset_o),  c("foto_mes",
                                                     "cmobile_app_trx", 
                                                     "Master_Finiciomora") )
 
-#https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/get
 dataset = dataset_o[, mget(campos_buenos)]
 dapply = dapply_o [, mget(campos_buenos)]
 #-----------------------------------------------------------
