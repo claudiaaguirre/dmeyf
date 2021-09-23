@@ -29,14 +29,12 @@ require("mlrMBO")
 #cambiar aqui las rutas en su maquina
 switch ( Sys.info()[['sysname']],
          Windows = { directory.root  <-  "M:\\" },   #Windows
-         Darwin  = { directory.root  <-  "~/dm/" },  #Apple MAC
+         Darwin  = { directory.root  <-  "/Users/claudia/DMenEyF/" },  #Apple MAC
          Linux   = { directory.root  <-  "~/buckets/b1/" } #Google Cloud
        )
 
 #defino la carpeta donde trabajo
 setwd( directory.root )
-
-
 
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
 

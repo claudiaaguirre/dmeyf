@@ -11,7 +11,7 @@ require("data.table")
 
 
 #Establezco el Working Directory
-setwd( "~/buckets/b1/crudoB" )
+setwd("/Users/claudia/DMenEyF/") 
 
 
 EnriquecerDataset <- function( dataset , arch_destino )

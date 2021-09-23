@@ -12,30 +12,36 @@ require("lightgbm")
 
 setwd("/Users/claudia/DMenEyF/")  #establezco la carpeta donde voy a trabajar
 
-#cargo el dataset
+#cargo el dataset#######################################
 dataset_train  <- fread("./datasetsOri/paquete_premium_202009.csv")
+#dataset_train  <- fread("./datasets/paquete_premium_202009_ext.csv")
+
+
+dataset_train[dataset_train[, "clase_ternaria" != "CONTINUA"]]
 
 #creo la clase_binaria donde en la misma bolsa estan los BAJA+1 y BAJA+2
 dataset_train[ , clase01:= ifelse( clase_ternaria=="CONTINUA", 0, 1 ) ]
 
 #Quito el Data Drifting de  "ccajas_transacciones"  "Master_mpagominimo"
-#campos_buenos  <- setdiff( colnames(dataset),
-#                           c("clase_ternaria", "clase01", "ccajas_transacciones", "Master_mpagominimo" ) )
+campos_buenos  <- setdiff( colnames(dataset_train),
+                           c("clase_ternaria", "clase01", "ccajas_transacciones", "Master_mpagominimo",
+                             "ctrx_quarter",
+                             "cpayroll_trx",
+                             "mpayroll") )
 
-campos_buenos  <- setdiff(  colnames(dataset_train),  c("clase_ternaria", "clase01",
-                                                  "ccajas_transacciones", "Master_mpagominimo",
-                                                   "foto_mes", 
-                                                    "internet", 
-                                                    "mactivos_margen", 
-                                                    "mpasivos_margen", 
-                                                    "tpaquete1", 
-                                                    "mcajeros_propios_descuentos", 
-                                                    "mtarjeta_visa_descuentos", 
-                                                    "mtarjeta_master_descuentos", 
-                                                    "matm_other","tmobile_app",
-                                                    "cmobile_app_trx", 
-                                                    "Master_Finiciomora") )
-
+#campos_buenos  <- setdiff(  colnames(dataset_train),  c("clase_ternaria", "clase01",
+#                                                   "foto_mes", 
+#                                                    "internet", 
+#                                                    "mactivos_margen", 
+#                                                    "mpasivos_margen", 
+#                                                    "tpaquete1", 
+#                                                    "mcajeros_propios_descuentos", 
+#                                                    "mtarjeta_visa_descuentos", 
+#                                                    "mtarjeta_master_descuentos", 
+#                                                    "matm_other","tmobile_app",
+#                                                    "cmobile_app_trx", 
+#                                                    "Master_Finiciomora") )
+#
 
 #genero el formato requerido por LightGBM
 
@@ -46,9 +52,16 @@ dtrainlgb  <- lgb.Dataset( data=  data.matrix(  dataset_train[ , campos_buenos, 
 #Dadme un punto de apoyo y movere el mundo, Arquimedes
 modelo  <- lightgbm( data= dtrainlgb,
                      params= list( objective= "binary",
-                                   max_bin= 15, #15
-                                   min_data_in_leaf= 2000,#4000
-                                   learning_rate= 0.01 )  )
+                                   max_bin= 15, 
+                                   min_data_in_leaf= 4000,
+                                   learning_rate= 0.05,
+                                   num_iterations = 100
+                                    )  )
+
+#calculo la importancia de variables##################################
+tb_importancia  <- lgb.importance( model= modelo )
+fwrite( tb_importancia, 
+        file= "./work/E_lightgbm_con_los_pibes_NO_1_imp.txt",sep="\t")
 
 #----------------
 #Calculo de la ganancia con los datos de entrenamiento:
@@ -56,12 +69,13 @@ modelo  <- lightgbm( data= dtrainlgb,
 prediccion_training  <- predict( modelo,  data.matrix(dataset_train[ , campos_buenos, with=FALSE]))
 
 #dataset_train[, c("numero_de_cliente","clase_ternaria")]
-ganancia = dataset_train[, sum( (prediccion_training > 0.031) *ifelse( clase01 == 1, 48750, -1250))]
+ganancia = dataset_train[, sum( (prediccion_training > 0.031) *ifelse( clase_ternaria == "BAJA+2", 48750, -1250))]
 print(ganancia)
 #----------------
 
-#cargo el dataset donde aplico el modelo
+#cargo el dataset donde aplico el modelo###########################
 dapply  <- fread("./datasetsOri/paquete_premium_202011.csv")
+#dapply  <- fread("./datasets/paquete_premium_202011_ext.csv" )
 
 #aplico el modelo a los datos nuevos, dapply
 prediccion  <- predict( modelo,  data.matrix( dapply[  , campos_buenos, with=FALSE]))
@@ -74,3 +88,4 @@ entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_clien
 fwrite( entrega, 
         file= "./kaggle/lightgbm_con_los_pibes_NO.csv",
         sep=  "," )
+
