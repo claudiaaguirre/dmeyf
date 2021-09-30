@@ -22,7 +22,9 @@ for( campo in  campos_buenos )
   cat( campo, "  " )
 
   tbl  <- datasetA[ , c("numero_de_cliente", campo),   with=FALSE ]
+  
   tbl[  datasetB, on="numero_de_cliente",  futuro := get(paste0("i.",campo)) ]
+  
   tbl[ , delta :=  futuro - get(campo)  ]
 
   drift  <- density( tbl[ !is.na(delta), delta ] , kernel="gaussian", na.rm=TRUE)

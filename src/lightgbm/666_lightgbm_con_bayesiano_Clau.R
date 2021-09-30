@@ -221,7 +221,8 @@ campos_buenos  <- setdiff(  colnames(dataset_train),  c("clase_ternaria", "clase
                                                   "mcajeros_propios_descuentos", 
                                                   "mtarjeta_visa_descuentos", 
                                                   "mtarjeta_master_descuentos", 
-                                                  "matm_other","tmobile_app",
+                                                  "matm_other",
+                                                  "tmobile_app",
                                                   "cmobile_app_trx", 
                                                   "Master_Finiciomora") )
 
