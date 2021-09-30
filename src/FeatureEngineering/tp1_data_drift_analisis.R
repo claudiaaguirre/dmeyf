@@ -49,9 +49,7 @@ dB = datasetB[, mget(campos_buenos)]
 #Develop a model to discriminate between these two labels.
 #Evaluate the results and adjust the model if necessary.
 #-------------------------------------------------------------
-#######################
-# Usando lgb
-#######################
+
 dA$"real_clas"= "A"
 dB$"real_clas"= "B"
 
@@ -61,17 +59,50 @@ nrow(dA)
 nrow(dB)
 nrow(dAB)
 
-require("lightgbm")
-
-#https://www.rdocumentation.org/packages/ROCR/versions/1.0-11/topics/prediction
-
 #Divido en train y test------------------:
 set.seed(621983)
 dt = sort(sample(nrow(dAB), nrow(dAB)*.7))
 df_train = dAB[dt,]
 df_test = dAB[-dt,]
+nrow(df_train)
+nrow(df_test)
+nrow(df_test[df_test$real_clas=="A"])
+nrow(df_test[df_test$real_clas=="B"])
 #----------------------------------------
 
+#######################
+# Usando rpart
+#######################
+require("rpart")
+library(tidyverse)
+#genero el modelo
+modelo  <- rpart("real_clas ~ .",
+                 data= df_train,
+                 xval= 0,
+                 cp= -1,
+                 maxdepth= 10 )
+
+prediccion  <- predict( modelo, df_test , type= "prob") #aplico el modelo
+
+p = as.data.frame(prediccion)
+glimpse(p)
+p = p %>% mutate(pred_A = A, pred_B = B) %>% select(pred_A,pred_B)
+glimpse(p)
+
+#p %>% filter(A>0.9) %>% count()
+rbind()
+
+df_test$predict = as.numeric(p)
+
+#prediccion[,"A"] > 0.5, "A", "B"
+#df_test[ , Predicted  := as.numeric(prob_baja2 > 0.025) ]
+
+#######################
+# Usando lgb
+#######################
+require("lightgbm")
+
+#https://www.rdocumentation.org/packages/ROCR/versions/1.0-11/topics/prediction
 dt_lgb  <- lgb.Dataset( data=  data.matrix(df_train),
                            label= df_train$real_clas)
 
@@ -88,22 +119,22 @@ print(prediccion_training)
 
 df_test$predict = as.numeric(prediccion_training)
 
+#######################
+# Impresión de resultados
+#######################
+
 print("-----------COMIENZO DE CORRIDA------------\n")
-nrow(df_test[df_test$real_clas == "A" & df_test$predict >= 0.9,]) #235354------------
-nrow(df_test[df_test$real_clas == "A"]) #235354       claseA (dA) = 235354
+nrow(df_test[df_test$real_clas == "A" & df_test$predict >= 0.9,]) 
+nrow(df_test[df_test$real_clas == "A"]) 
 print("--------\n")
 
-nrow(df_test[df_test$real_clas == "B" & df_test$predict >= 0.9,]) #238986------------
-nrow(df_test[df_test$real_clas == "B",]) #238986   claseB (dB) = 238986
+nrow(df_test[df_test$real_clas == "B" & df_test$predict >= 0.9,]) 
+nrow(df_test[df_test$real_clas == "B",]) 
 print("-----------FIN DE CORRIDA------------\n")
 
 df_test[,c("real_clas", "predict")]
 
-df_test
-#confusionMatrix(df_final_train$Category, pred_tr$lda$class
-#library(caret)
-#dAB[, "red_class"= ifelse(dAB$predict < 0.5, 0, 1)]
-#dAB[ , red_class  := as.numeric(prob_baja2 > 0.025) ]
+
 
 #-------------------------------------------------------------
 #--------Kolmogorov–Smirnov test (K–S test or KS test)--------
