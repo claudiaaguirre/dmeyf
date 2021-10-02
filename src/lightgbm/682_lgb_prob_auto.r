@@ -35,8 +35,6 @@ switch ( Sys.info()[['sysname']],
 #defino la carpeta donde trabajo
 setwd( directory.root )
 
-
-
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
 
 kscript           <- "682_lgb_prob_auto"
@@ -60,24 +58,8 @@ hs <- makeParamSet(
          
         )
 
-
-
-
 ##########################################
-#campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
-
-campos_malos  <- c("foto_mes", 
-                                                      "internet", 
-                                                      "mactivos_margen", 
-                                                      "mpasivos_margen", 
-                                                      "tpaquete1", 
-                                                      "mcajeros_propios_descuentos", 
-                                                      "mtarjeta_visa_descuentos", 
-                                                      "mtarjeta_master_descuentos", 
-                                                      "matm_other","tmobile_app",
-                                                      "cmobile_app_trx", 
-                                                      "Master_Finiciomora")
-
+campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
 
 #########################################
 ksemilla_azar  <- 999979  #Aqui poner la propia semilla

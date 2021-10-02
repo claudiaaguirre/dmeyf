@@ -83,16 +83,26 @@ modelo  <- rpart("real_clas ~ .",
                  maxdepth= 10 )
 
 prediccion  <- predict( modelo, df_test , type= "prob") #aplico el modelo
+df_test$A =  prediccion[,"A"]
 
-p = as.data.frame(prediccion)
-glimpse(p)
-p = p %>% mutate(pred_A = A, pred_B = B) %>% select(pred_A,pred_B)
-glimpse(p)
+df_test[ , predict_A  :=  ifelse(as.numeric(A > 0.5),1,0) ]
+head(df_test)
+
+nrow(df_test[real_clas=="A" & predict_A == 1,])
+nrow(df_test[real_clas=="A" & predict_A != 1,])
+
+nrow(df_test[real_clas=="B" & predict_A == 1,])
+nrow(df_test[real_clas=="B" & predict_A != 1,])
+
+#p = as.data.frame(prediccion)
+#glimpse(p)
+#p = p %>% mutate(pred_A = A, pred_B = B) %>% select(pred_A,pred_B)
+#glimpse(p)
 
 #p %>% filter(A>0.9) %>% count()
-rbind()
+dft = rbind(df_test, p)
+head(dft)
 
-df_test$predict = as.numeric(p)
 
 #prediccion[,"A"] > 0.5, "A", "B"
 #df_test[ , Predicted  := as.numeric(prob_baja2 > 0.025) ]
