@@ -24,24 +24,29 @@ dataset_train[ , clase01:= ifelse( clase_ternaria=="CONTINUA", 0, 1 ) ]
 
 #Quito el Data Drifting de  "ccajas_transacciones"  "Master_mpagominimo"
 campos_buenos  <- setdiff( colnames(dataset_train),
-                           c("clase_ternaria", "clase01", "ccajas_transacciones", "Master_mpagominimo",
+                           c("clase_ternaria", 
                              "ctrx_quarter",
                              "cpayroll_trx",
-                             "mpayroll") )
-
-#campos_buenos  <- setdiff(  colnames(dataset_train),  c("clase_ternaria", "clase01",
-#                                                   "foto_mes", 
-#                                                    "internet", 
-#                                                    "mactivos_margen", 
-#                                                    "mpasivos_margen", 
-#                                                    "tpaquete1", 
-#                                                    "mcajeros_propios_descuentos", 
-#                                                    "mtarjeta_visa_descuentos", 
-#                                                    "mtarjeta_master_descuentos", 
-#                                                    "matm_other","tmobile_app",
-#                                                    "cmobile_app_trx", 
-#                                                    "Master_Finiciomora") )
-#
+                             "mpayroll",
+                             "mcaja_ahorro",
+                             "mtarjeta_visa_consumo",
+                             "ctarjeta_visa_transacciones",
+                             "Visa_msaldopesos",
+                             "Visa_msaldototal",
+                             "Visa_mpagominimo",
+                             "ctarjeta_debito_transacciones",
+                             "mautoservicio",
+                             "mpasivos_margen",
+                             "ccomisiones_otras",
+                             "mcuentas_saldo",
+                             "Visa_mpagospesos",
+                             "Visa_cconsumos",
+                             "Visa_mconsumospesos",
+                             "mtransferencias_recibidas",
+                             "Visa_mconsumototal",
+                             "Visa_mconsumosdolares",
+                             "clase01"
+                             ) )
 
 #genero el formato requerido por LightGBM
 
@@ -61,31 +66,31 @@ modelo  <- lightgbm( data= dtrainlgb,
 #calculo la importancia de variables##################################
 tb_importancia  <- lgb.importance( model= modelo )
 fwrite( tb_importancia, 
-        file= "./work/E_lightgbm_con_los_pibes_NO_1_imp.txt",sep="\t")
+        file= "./work/E_lightgbm_importancia_variables.txt",sep="\t")
 
 #----------------
 #Calculo de la ganancia con los datos de entrenamiento:
 
-prediccion_training  <- predict( modelo,  data.matrix(dataset_train[ , campos_buenos, with=FALSE]))
+#####prediccion_training  <- predict( modelo,  data.matrix(dataset_train[ , campos_buenos, with=FALSE]))
 
 #dataset_train[, c("numero_de_cliente","clase_ternaria")]
-ganancia = dataset_train[, sum( (prediccion_training > 0.031) *ifelse( clase_ternaria == "BAJA+2", 48750, -1250))]
-print(ganancia)
+#####ganancia = dataset_train[, sum( (prediccion_training > 0.031) *ifelse( clase_ternaria == "BAJA+2", 48750, -1250))]
+######print(ganancia)
 #----------------
 
 #cargo el dataset donde aplico el modelo###########################
-dapply  <- fread("./datasetsOri/paquete_premium_202011.csv")
+#####dapply  <- fread("./datasetsOri/paquete_premium_202011.csv")
 #dapply  <- fread("./datasets/paquete_premium_202011_ext.csv" )
 
 #aplico el modelo a los datos nuevos, dapply
-prediccion  <- predict( modelo,  data.matrix( dapply[  , campos_buenos, with=FALSE]))
+#####prediccion  <- predict( modelo,  data.matrix( dapply[  , campos_buenos, with=FALSE]))
 
 #la probabilidad de corte ya no es 0.025,  sino que 0.031
-entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_cliente],
-                                 "Predicted"= as.numeric(prediccion > 0.031) ) ) #genero la salida
+#####entrega  <- as.data.table( list( "numero_de_cliente"= dapply[  , numero_de_cliente],
+#####                                 "Predicted"= as.numeric(prediccion > 0.031) ) ) #genero la salida
 
 #genero el archivo para Kaggle
-fwrite( entrega, 
-        file= "./kaggle/lightgbm_con_los_pibes_NO.csv",
-        sep=  "," )
+#####fwrite( entrega, 
+#####        file= "./kaggle/lightgbm_con_los_pibes_NO.csv",
+#####        sep=  "," )
 

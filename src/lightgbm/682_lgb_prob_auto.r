@@ -37,7 +37,7 @@ setwd( directory.root )
 
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
 
-kscript           <- "682_lgb_prob_auto"
+kscript           <- "682_lgb_prob_auto_data_drift_v2"
 karch_generacion  <- "./datasetsOri/paquete_premium_202009.csv"
 karch_aplicacion  <- "./datasetsOri/paquete_premium_202011.csv"
 kBO_iter    <-  150   #cantidad de iteraciones de la Optimizacion Bayesiana
@@ -59,7 +59,14 @@ hs <- makeParamSet(
         )
 
 ##########################################
-campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
+#campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
+
+#Usando importancia de variables
+campos_malos  <-  c("foto_mes", 
+                    "mpayroll",
+                    "mcuentas_saldo",
+                    "Visa_mconsumosdolares",
+                    "Visa_mpagominimo")
 
 #########################################
 ksemilla_azar  <- 999979  #Aqui poner la propia semilla
