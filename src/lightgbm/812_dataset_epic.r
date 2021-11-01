@@ -18,14 +18,16 @@ require("lightgbm")
 
 
 #defino la carpeta donde trabajo
-directory.root  <-  "~/buckets/b1/"  #Google Cloud
-setwd( directory.root )
+#####directory.root  <-  "~/buckets/b1/"  #Google Cloud
+#####setwd( directory.root )
+setwd("/Users/claudia/DMenEyF/") 
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v007"   #Muy importante, ir cambiando la version
+palancas$version  <- "v007"   #Muy importante, ir cambiando la version!!!!!!!!!!!
 
-palancas$variablesdrift  <- c("ccajas_transacciones", "Master_mpagominimo" )   #aqui van las columnas que se quieren eliminar
+#palancas$variablesdrift  <- c("ccajas_transacciones", "Master_mpagominimo" )   #aqui van las columnas que se quieren eliminar
+palancas$variablesdrift  <- c("ccajas_transacciones") 
 
 palancas$corregir <-  TRUE    # TRUE o FALSE
 
@@ -629,7 +631,6 @@ correr_todo  <- function( palancas )
 #Aqui empieza el programa
 
 
-correr_todo( palancas )
 
 
 quit( save="no" )

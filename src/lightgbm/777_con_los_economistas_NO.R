@@ -10,7 +10,8 @@ gc()
 require("data.table")
 require("lightgbm")
 
-setwd("~/buckets/b1/crudoB" )  #establezco la carpeta donde voy a trabajar
+#setwd("~/buckets/b1/crudoB" )  #establezco la carpeta donde voy a trabajar
+setwd("/Users/claudia/DMenEyF/") 
 
 #cargo el dataset
 dataset  <- fread("./datasetsOri/paquete_premium_202009.csv")
