@@ -29,46 +29,31 @@ require("mlrMBO")
 #cambiar aqui las rutas en su maquina
 switch ( Sys.info()[['sysname']],
          Windows = { directory.root  <-  "M:\\" },   #Windows
-         Darwin  = { directory.root  <-  "/Users/claudia/DMenEyF/" },  #Apple MAC
+         Darwin  = { directory.root  <-  "/Users/claudia/DMenEyF/"},  #Apple MAC
          Linux   = { directory.root  <-  "~/buckets/b1/" } #Google Cloud
-       )
+)
 #defino la carpeta donde trabajo
 setwd( directory.root )
 
+
+
 kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es para continuar procesando
 
-kscript           <- "682_lgb_prob_auto_data_drift_v2"
+kscript           <- "682_lgb_prob_auto"
 karch_generacion  <- "./datasetsOri/paquete_premium_202009.csv"
 karch_aplicacion  <- "./datasetsOri/paquete_premium_202011.csv"
-kBO_iter    <-  150   #cantidad de iteraciones de la Optimizacion Bayesiana
+kBO_iter    <-  5   #cantidad de iteraciones de la Optimizacion Bayesiana
 
 #Aqui se cargan los hiperparametros
 hs <- makeParamSet( 
-         makeNumericParam("learning_rate",    lower= 0.01 , upper=    0.1),
-         makeNumericParam("feature_fraction", lower= 0.2  , upper=    1.0),
-         makeIntegerParam("min_data_in_leaf", lower= 0    , upper= 8000),
-         makeIntegerParam("num_leaves",       lower=16L   , upper= 1024L),
-         
-         makeIntegerParam("max_depth", lower= 2    , upper= 200),
-         makeNumericParam("min_gain_to_split",    lower= 0.01 , upper=    0.1),
-         makeNumericParam("lambda_l1",    lower= 0.01 , upper=    0.9),
-         makeNumericParam("lambda_l2",    lower= 0.01 , upper=    0.9),
-         #makeIntegerParam("max_bin",    lower= 2 , upper=    255),
-         makeIntegerParam("num_iterations", lower= 10     , upper= 200)
-         
-        )
+  makeNumericParam("learning_rate",    lower= 0.01 , upper=    0.1),
+  makeNumericParam("feature_fraction", lower= 0.2  , upper=    1.0),
+  makeIntegerParam("min_data_in_leaf", lower= 0    , upper= 8000),
+  makeIntegerParam("num_leaves",       lower=16L   , upper= 1024L)
+)
 
-##########################################
-#campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
+campos_malos  <- c( "ccajas_transacciones", "Master_mpagominimo" )   #aqui se deben cargar todos los campos culpables del Data Drifting
 
-#Usando importancia de variables
-campos_malos  <-  c("foto_mes", 
-                    "mpayroll",
-                    "mcuentas_saldo",
-                    "Visa_mconsumosdolares",
-                    "Visa_mpagominimo")
-
-#########################################
 ksemilla_azar  <- 999979  #Aqui poner la propia semilla
 #------------------------------------------------------------------------------
 #Funcion que lleva el registro de los experimentos
@@ -76,15 +61,15 @@ ksemilla_azar  <- 999979  #Aqui poner la propia semilla
 get_experimento  <- function()
 {
   if( !file.exists( "./maestro.yaml" ) )  cat( file="./maestro.yaml", "experimento: 1000" )
-
+  
   exp  <- read_yaml( "./maestro.yaml" )
   experimento_actual  <- exp$experimento
-
+  
   exp$experimento  <- as.integer(exp$experimento + 1)
   Sys.chmod( "./maestro.yaml", mode = "0644", use_umask = TRUE)
   write_yaml( exp, "./maestro.yaml" )
   Sys.chmod( "./maestro.yaml", mode = "0444", use_umask = TRUE) #dejo el archivo readonly
-
+  
   return( experimento_actual )
 }
 #------------------------------------------------------------------------------
@@ -95,20 +80,20 @@ loguear  <- function( reg, arch=NA, folder="./work/", ext=".txt", verbose=TRUE )
 {
   archivo  <- arch
   if( is.na(arch) )  archivo  <- paste0(  folder, substitute( reg), ext )
-
+  
   if( !file.exists( archivo ) )  #Escribo los titulos
   {
     linea  <- paste0( "fecha\t", 
                       paste( list.names(reg), collapse="\t" ), "\n" )
-
+    
     cat( linea, file=archivo )
   }
-
+  
   linea  <- paste0( format(Sys.time(), "%Y%m%d %H%M%S"),  "\t",     #la fecha y hora
                     gsub( ", ", "\t", toString( reg ) ),  "\n" )
-
+  
   cat( linea, file=archivo, append=TRUE )  #grabo al archivo
-
+  
   if( verbose )  cat( linea )   #imprimo por pantalla
 }
 #------------------------------------------------------------------------------
@@ -119,16 +104,16 @@ fganancia_logistic_lightgbm_meseta  <- function(probs, datos)
 {
   vlabels  <- getinfo(datos, "label")
   vpesos   <- getinfo(datos, "weight")
-
+  
   #solo sumo 48750 si vpesos > 1, hackeo 
   tbl  <- as.data.table( list( "prob"=probs, "gan"= ifelse( vlabels==1 & vpesos > 1, 48750, -1250 ) ) )
-
+  
   setorder( tbl, -prob )
   tbl[ , gan_acum :=  cumsum( gan ) ]
   gan  <- max( tbl$gan_acum )
-
+  
   VPROBS_CORTE  <<- c(VPROBS_CORTE,  tbl[ which.max( tbl$gan_acum ) , prob ] )
-
+  
   return( list( "name"= "ganancia", 
                 "value"=  gan,
                 "higher_better"= TRUE ) )
@@ -140,11 +125,11 @@ fganancia_logistic_lightgbm_meseta  <- function(probs, datos)
 EstimarGanancia_lightgbm  <- function( x )
 {
   GLOBAL_iteracion  <<- GLOBAL_iteracion + 1
-
+  
   gc()
-
+  
   kfolds  <- 5   # cantidad de folds para cross validation
-
+  
   param_basicos  <- list( objective= "binary",
                           metric= "custom",
                           first_metric_only= TRUE,
@@ -152,72 +137,78 @@ EstimarGanancia_lightgbm  <- function( x )
                           feature_pre_filter= FALSE,
                           verbosity= -100,
                           seed= 999983,
+                          max_depth=  -1,         # -1 significa no limitar,  por ahora lo dejo fijo
+                          min_gain_to_split= 0.0, #por ahora, lo dejo fijo
+                          lambda_l1= 0.0,         #por ahora, lo dejo fijo
+                          lambda_l2= 0.0,         #por ahora, lo dejo fijo
+                          max_bin= 31,            #por ahora, lo dejo fijo
+                          num_iterations= 9999,    #un numero muy grande, lo limita early_stopping_rounds
                           force_row_wise= TRUE    #para que los alumnos no se atemoricen con tantos warning
-                        )
+  )
   
   #el parametro discolo, que depende de otro
   param_variable  <- list(  early_stopping_rounds= as.integer(50 + 5/x$learning_rate) )
-
+  
   param_completo  <- c( param_basicos, param_variable, x )
-
+  
   VPROBS_CORTE  <<- c()
   set.seed( 999983 )
   modelocv  <- lgb.cv( data= dtrain,
-                       valids= list( valid= dvalid ),
+                       #valids= list( valid= dvalid ),
                        eval= fganancia_logistic_lightgbm_meseta,
                        stratified= TRUE, #sobre el cross validation
                        nfold= kfolds,    #folds del cross validation
                        param= param_completo,
                        verbose= -100
-                      )
-
-
+  )
+  
+  
   ganancia  <- unlist(modelocv$record_evals$valid$ganancia$eval)[ modelocv$best_iter ]
-
+  
   ganancia_normalizada  <-  ganancia* kfolds  
   attr(ganancia_normalizada ,"extras" )  <- list("num_iterations"= modelocv$best_iter)  #esta es la forma de devolver un parametro extra
-
+  
   param_completo$num_iterations  <- modelocv$best_iter  #asigno el mejor num_iterations
   param_completo["early_stopping_rounds"]  <- NULL
   param_completo["prob_corte"]  <- mean( VPROBS_CORTE )
-
-   #si tengo una ganancia superadora, genero el archivo para Kaggle
-   if(  ganancia_normalizada > GLOBAL_ganancia_max )
-   {
-     GLOBAL_ganancia_max  <<- ganancia_normalizada  #asigno la nueva maxima ganancia a una variable GLOBAL, por eso el <<-
-
-     set.seed(ksemilla_azar)
-
-     modelo  <- lightgbm( data= dtrain,
-                          param= param_completo,
-                          verbose= -100
-                        )
-
+  
+  #si tengo una ganancia superadora, genero el archivo para Kaggle
+  if(  ganancia_normalizada > GLOBAL_ganancia_max )
+  {
+    GLOBAL_ganancia_max  <<- ganancia_normalizada  #asigno la nueva maxima ganancia a una variable GLOBAL, por eso el <<-
+    
+    set.seed(ksemilla_azar)
+    
+    modelo  <- lightgbm( data= dtrain,
+                         param= param_completo,
+                         verbose= -100
+    )
+    
     #calculo la importancia de variables
     tb_importancia  <- lgb.importance( model= modelo )
     fwrite( tb_importancia, 
             file= paste0(kimp, "imp_", GLOBAL_iteracion, ".txt"),
             sep="\t" )
-
-     prediccion  <- predict( modelo, data.matrix( dapply[  , campos_buenos, with=FALSE]) )
-
-     Predicted  <- as.integer( prediccion > param_completo$prob_corte )
-
-     entrega  <- as.data.table( list( "numero_de_cliente"= dapply$numero_de_cliente, 
-                                      "Predicted"= Predicted)  )
-
-     #genero el archivo para Kaggle
-     fwrite( entrega, 
-             file= paste0(kkaggle, GLOBAL_iteracion, ".csv" ),
-             sep= "," )
-   }
-
-   #logueo 
-   xx  <- param_completo
-   xx$ganancia  <- ganancia_normalizada   #le agrego la ganancia
-   loguear( xx,  arch= klog )
-
-   return( ganancia )
+    
+    prediccion  <- predict( modelo, data.matrix( dapply[  , campos_buenos, with=FALSE]) )
+    
+    Predicted  <- as.integer( prediccion > param_completo$prob_corte )
+    
+    entrega  <- as.data.table( list( "numero_de_cliente"= dapply$numero_de_cliente, 
+                                     "Predicted"= Predicted)  )
+    
+    #genero el archivo para Kaggle
+    fwrite( entrega, 
+            file= paste0(kkaggle, GLOBAL_iteracion, ".csv" ),
+            sep= "," )
+  }
+  
+  #logueo 
+  xx  <- param_completo
+  xx$ganancia  <- ganancia_normalizada   #le agrego la ganancia
+  loguear( xx,  arch= klog )
+  
+  return( ganancia )
 }
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
@@ -237,9 +228,9 @@ GLOBAL_iteracion  <- 0
 #si ya existe el archivo log, traigo hasta donde llegue
 if( file.exists(klog) )
 {
- tabla_log  <- fread( klog)
- GLOBAL_iteracion  <- nrow( tabla_log ) -1
- GLOBAL_ganancia_max  <- tabla_log[ , max(ganancia) ]
+  tabla_log  <- fread( klog)
+  GLOBAL_iteracion  <- nrow( tabla_log ) -1
+  GLOBAL_ganancia_max  <- tabla_log[ , max(ganancia) ]
 }
 
 
@@ -274,12 +265,12 @@ configureMlr( show.learner.output= FALSE)
 #configuro la busqueda bayesiana,  los hiperparametros que se van a optimizar
 #por favor, no desesperarse por lo complejo
 obj.fun  <- makeSingleObjectiveFunction(
-              fn=       funcion_optimizar, #la funcion que voy a maximizar
-              minimize= FALSE,   #estoy Maximizando la ganancia
-              noisy=    TRUE,
-              par.set=  hs,     #definido al comienzo del programa
-              has.simple.signature = FALSE   #paso los parametros en una lista
-             )
+  fn=       funcion_optimizar, #la funcion que voy a maximizar
+  minimize= FALSE,   #estoy Maximizando la ganancia
+  noisy=    TRUE,
+  par.set=  hs,     #definido al comienzo del programa
+  has.simple.signature = FALSE   #paso los parametros en una lista
+)
 
 ctrl  <- makeMBOControl( save.on.disk.at.time= 600,  save.file.path= kbayesiana)  #se graba cada 600 segundos
 ctrl  <- setMBOControlTermination(ctrl, iters= kBO_iter )   #cantidad de iteraciones
@@ -308,6 +299,4 @@ system( "sleep 10  &&  sudo shutdown -h now", wait=FALSE)
 #        wait=FALSE )
 
 
-quit( save="no" )
-
-
+#quit( save="no" )
