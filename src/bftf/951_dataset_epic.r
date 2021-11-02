@@ -659,6 +659,6 @@ correr_todo  <- function( palancas )
 correr_todo( palancas )
 
 
-quit( save="no" )
+#quit( save="no" )
 
 
