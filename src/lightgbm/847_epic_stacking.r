@@ -1,4 +1,4 @@
-#source("~/buckets/b1/crudoB/R/847_epic_stacking.r")
+l #source("~/buckets/b1/crudoB/R/847_epic_stacking.r")
 
 #Necesita para correr en Google Cloud
 #16 GB de memoria RAM
