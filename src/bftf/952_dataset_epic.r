@@ -22,9 +22,20 @@ setwd( directory.root )
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v952_exp4"   #Muy importante, ir cambiando la version: "v952"
+palancas$version  <- "v952_exp4_1"   #Muy importante, ir cambiando la version
 
-palancas$variablesdrift  <- c()   #aqui van las columnas que se quieren eliminar
+#Se incluye columnas a sacar relacionadas con la  "importancia de variables".
+palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
+                              "ctransferencias_emitidas", "Master_mpagominimo", "Visa_delinquency", "Master_mpagospesos",
+                              "cliente_vip", "cpagomiscuentas", "ccajas_consultas", "ctarjeta_debito", "internet", "mextraccion_autoservicio",
+                              "ctarjeta_visa_debitos_automaticos", "cextraccion_autoservicio", "ccajas_otras", "ctarjeta_master_transacciones",
+                              "Visa_mpagosdolares", "ccuenta_debitos_automaticos", "Master_mconsumospesos", "Visa_mpagado", "ccajas_transacciones",
+                              "matm", "Master_mconsumototal", "mforex_sell", "cseguro_vida", "tcuentas", "Visa_msaldodolares",
+                              "Master_mconsumosdolares", "active_quarter", "matm_other", "Master_cconsumos", "ccajas_depositos", "ccajas_extracciones",
+                              "Master_delinquency", "Master_mpagosdolares", "catm_trx", "mttarjeta_master_debitos_automaticos", "Visa_madelantopesos",
+                              "catm_trx_other", "cforex_sell", "ctarjeta_master_debitos_automaticos", "mcaja_ahorro_adicional",
+                              "cseguro_accidentes_personales", "Master_cadelantosefectivo", "Visa_cadelantosefectivo", "cseguro_vivienda",
+                              "cinversion2", "cforex", "Master_mpagado", "ccheques_depositados", "tpaquete3", "Master_madelantopesos", "tpaquete4")   #aqui van las columnas que se quieren eliminar
 
 palancas$corregir <-  TRUE    # TRUE o FALSE
 
@@ -60,7 +71,7 @@ palancas$ratiomean6  <- FALSE   #Un derivado de la idea de Daiana Sparta
 palancas$tendencia6  <- FALSE    #Great power comes with great responsability
 
 
-palancas$canaritosimportancia  <- TRUE  #si me quedo solo con lo mas importante de canaritosimportancia
+palancas$canaritosimportancia  <- FALSE  #si me quedo solo con lo mas importante de canaritosimportancia
 
 
 #escribo para saber cuales fueron los parametros
