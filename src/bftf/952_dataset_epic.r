@@ -22,7 +22,7 @@ setwd( directory.root )
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v952_exp4_1"   #Muy importante, ir cambiando la version
+palancas$version  <- "v952_exp4_2"   #Muy importante, ir cambiando la version
 
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
 palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
@@ -43,8 +43,8 @@ palancas$nuevasvars <-  FALSE  #si quiero hacer Feature Engineering manual
 
 palancas$dummiesNA  <-  FALSE #La idea de Santiago Dellachiesa
 
-palancas$lag1   <- FALSE    #lag de orden 1
-palancas$delta1 <- FALSE    # campo -  lag de orden 1 
+palancas$lag1   <- TRUE    #lag de orden 1
+palancas$delta1 <- TRUE    # campo -  lag de orden 1 
 palancas$lag2   <- FALSE
 palancas$delta2 <- FALSE
 palancas$lag3   <- FALSE
