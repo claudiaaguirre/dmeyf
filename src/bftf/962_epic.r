@@ -3,6 +3,13 @@
 #256 GB de espacio en el disco local
 #8 vCPU
 
+#--------OPCION 2---
+#-------------------
+#256 GB de memoria RAM
+#512 GB de espacio en el disco local
+#8 vCPU
+
+
 #clase_binaria2   1={BAJA+2,BAJA+1}    0={CONTINUA}
 #Entrena en a union de VEINTE  meses de [201901, 202009] - { 202006 }  haciendo subsampling al 10% de los continua
 #Testea en  { 202011 }
@@ -45,7 +52,7 @@ kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es pa
 
 kscript         <- "962_epic"
 
-karch_dataset    <- "./datasets/dataset_epic_v952_exp4_4.csv.gz"
+karch_dataset    <- "./datasets/dataset_epic_v952_exp4_5.csv.gz"
 
 kapply_mes       <- c(202101)  #El mes donde debo aplicar el modelo
 
