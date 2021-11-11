@@ -22,7 +22,7 @@ setwd( directory.root )
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v952_exp4_5"   #Muy importante, ir cambiando la version
+palancas$version  <- "v952_exp9_6"   #Muy importante, ir cambiando la version
 
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
 palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
@@ -51,10 +51,10 @@ palancas$lag3   <- TRUE
 palancas$delta3 <- TRUE
 palancas$lag4   <- TRUE
 palancas$delta4 <- TRUE
-palancas$lag5   <- TRUE
-palancas$delta5 <- TRUE
-palancas$lag6   <- TRUE
-palancas$delta6 <- TRUE
+palancas$lag5   <- FALSE
+palancas$delta5 <- FALSE
+palancas$lag6   <- FALSE
+palancas$delta6 <- FALSE
 
 palancas$promedio3  <- FALSE  #promedio  de los ultimos 3 meses
 palancas$promedio6  <- FALSE
