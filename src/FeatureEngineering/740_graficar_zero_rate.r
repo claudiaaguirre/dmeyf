@@ -11,13 +11,14 @@ require("data.table")
 
 
 #Aqui comienza el programa
-setwd("~/buckets/b1")
-#setwd("/Users/claudia/DMenEyF/")
+#setwd("~/buckets/b1")
+setwd("/Users/claudia/DMenEyF/")
 #---------
 
 #cargo el dataset donde voy a entrenar
-dataset  <- fread("./datasetsOri/paquete_premium.csv.gz")
+#dataset  <- fread("./datasetsOri/paquete_premium.csv.gz")
 #dataset  <- fread("./datasetsOri/paquete_premium_202009.csv")
+dataset  <- fread("./datasetsOri/datasets_dataset_epic_v952_exp4.csv.gz")
 
 #ordeno el dataset
 setorder( dataset,  foto_mes )
@@ -28,15 +29,16 @@ campos_buenos  <-  setdiff(  colnames( dataset),  c("numero_de_cliente","foto_me
 #--------------------------------------------
 pdf("./work/baja_mas_2.pdf")
 
-tbl <- dataset[ foto_mes<=202101 ,  list( "baja_mas_2" = sum("clase_ternaria"== "BAJA+2", na.rm=TRUE)/.N ) , foto_mes ]
+tbl <- dataset[ foto_mes<=202101,list( "baja_mas_2" = sum("clase_ternaria" == "BAJA+2", na.rm=TRUE)/.N ),by=foto_mes ]
+#print(tbl$baja_mas_2)
 
-ymin <-  min( tbl$zero_ratio )
-ymax <-  max( tbl$zero_ratio )
+ymin <-  min( tbl$baja_mas_2 )
+ymax <-  max( tbl$baja_mas_2 )
 if( ymin == 0 )  ymin <- -0.1
 if( ymax == 0 )  ymax <-  0.1
 
 plot(x= 1:nrow(tbl),
-       y= tbl$zero_ratio,
+       y= tbl$baja_mas_2,
        type= "o",
        main= paste0("Baja mas 2"),
        xlab= "Periodo",
