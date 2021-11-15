@@ -22,7 +22,8 @@ setwd( directory.root )
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v952_exp10_7"   #Muy importante, ir cambiando la version
+palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
+
 
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
 palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
@@ -49,23 +50,23 @@ palancas$lag2   <- TRUE
 palancas$delta2 <- TRUE
 palancas$lag3   <- TRUE
 palancas$delta3 <- TRUE
-palancas$lag4   <- FALSE
-palancas$delta4 <- FALSE
-palancas$lag5   <- FALSE
-palancas$delta5 <- FALSE
+palancas$lag4   <- TRUE
+palancas$delta4 <- TRUE
+palancas$lag5   <- TRUE
+palancas$delta5 <- TRUE
 palancas$lag6   <- FALSE
 palancas$delta6 <- FALSE
 
-palancas$promedio3  <- TRUE  #promedio  de los ultimos 3 meses
+palancas$promedio3  <- FALSE  #promedio  de los ultimos 3 meses
 palancas$promedio6  <- FALSE
 
-palancas$minimo3  <- TRUE  #minimo de los ultimos 3 meses
+palancas$minimo3  <- FALSE  #minimo de los ultimos 3 meses
 palancas$minimo6  <- FALSE
 
-palancas$maximo3  <- TRUE  #maximo de los ultimos 3 meses
+palancas$maximo3  <- FALSE  #maximo de los ultimos 3 meses
 palancas$maximo6  <- FALSE
 
-palancas$ratiomax3   <- TRUE   #La idea de Daiana Sparta
+palancas$ratiomax3   <- FALSE   #La idea de Daiana Sparta
 palancas$ratiomean6  <- FALSE   #Un derivado de la idea de Daiana Sparta
 
 palancas$tendencia6  <- FALSE    #Great power comes with great responsability

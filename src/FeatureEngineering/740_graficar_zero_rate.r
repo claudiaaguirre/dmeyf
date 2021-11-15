@@ -29,7 +29,10 @@ campos_buenos  <-  setdiff(  colnames( dataset),  c("numero_de_cliente","foto_me
 #--------------------------------------------
 pdf("./work/baja_mas_2.pdf")
 
-tbl <- dataset[ foto_mes<=202101,list( "baja_mas_2" = sum("clase_ternaria" == "BAJA+2", na.rm=TRUE)/.N ),by=foto_mes ]
+tbl <- dataset[ foto_mes<=202101,list( "baja_mas_2" = sum(get("clase_ternaria") == "BAJA+2")),by=foto_mes ]
+print(tbl$baja_mas_2)
+
+#tbl <- dataset[foto_mes<=202101 & "clase_ternaria" == "BAJA+2",list("baja_mas_2" = .N) ,by=foto_mes ]
 #print(tbl$baja_mas_2)
 
 ymin <-  min( tbl$baja_mas_2 )
