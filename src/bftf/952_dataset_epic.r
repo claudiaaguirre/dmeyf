@@ -23,7 +23,7 @@ setwd( directory.root )
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
 #palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
-palancas$version  <- "v952_reduccion_2" 
+palancas$version  <- "v952_exp13" 
 
 palancas$variablesdrift  <- c()
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
@@ -42,7 +42,7 @@ palancas$variablesdrift  <- c()
 
 palancas$corregir <-  FALSE    # TRUE o FALSE
 
-palancas$nuevasvars <-  FALSE  #si quiero hacer Feature Engineering manual
+palancas$nuevasvars <-  TRUE  #si quiero hacer Feature Engineering manual
 
 palancas$dummiesNA  <-  FALSE #La idea de Santiago Dellachiesa
 
@@ -74,7 +74,7 @@ palancas$ratiomean6  <- FALSE   #Un derivado de la idea de Daiana Sparta
 palancas$tendencia6  <- FALSE    #Great power comes with great responsability
 
 
-palancas$canaritosimportancia  <- TRUE  #si me quedo solo con lo mas importante de canaritosimportancia
+palancas$canaritosimportancia  <- FALSE  #si me quedo solo con lo mas importante de canaritosimportancia
 
 
 #escribo para saber cuales fueron los parametros
@@ -616,8 +616,8 @@ correr_todo  <- function( palancas )
   #cargo el dataset ORIGINAL
   #------------------------------------------------------------
   #dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
-  dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
-  
+  #dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
+  dataset  <- fread( "./datasets/dataset_epic_v952_reduccion_2.csv.gz")
   
   #------------------------------------------------------------
   
