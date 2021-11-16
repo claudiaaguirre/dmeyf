@@ -616,6 +616,8 @@ correr_todo  <- function( palancas )
   #------------------------------------------------------------
   #dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
   dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
+  
+  
   #------------------------------------------------------------
   
   setorder(  dataset, numero_de_cliente, foto_mes )  #ordeno el dataset
