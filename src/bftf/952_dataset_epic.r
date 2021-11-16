@@ -25,6 +25,7 @@ palancas  <- list()  #variable con las palancas para activar/desactivar
 #palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
 palancas$version  <- "v952_reduccion_2" 
 
+palancas$variablesdrift  <- c()
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
 # palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
 #                               "ctransferencias_emitidas", "Master_mpagominimo", "Visa_delinquency", "Master_mpagospesos",
