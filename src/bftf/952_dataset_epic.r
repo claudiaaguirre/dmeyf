@@ -22,38 +22,39 @@ setwd( directory.root )
 
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
-palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
-
+#palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
+palancas$version  <- "v952_reduccion_2" 
 
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
-palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
-                              "ctransferencias_emitidas", "Master_mpagominimo", "Visa_delinquency", "Master_mpagospesos",
-                              "cliente_vip", "cpagomiscuentas", "ccajas_consultas", "ctarjeta_debito", "internet", "mextraccion_autoservicio",
-                              "ctarjeta_visa_debitos_automaticos", "cextraccion_autoservicio", "ccajas_otras", "ctarjeta_master_transacciones",
-                              "Visa_mpagosdolares", "ccuenta_debitos_automaticos", "Master_mconsumospesos", "Visa_mpagado", "ccajas_transacciones",
-                              "matm", "Master_mconsumototal", "mforex_sell", "cseguro_vida", "tcuentas", "Visa_msaldodolares",
-                              "Master_mconsumosdolares", "active_quarter", "matm_other", "Master_cconsumos", "ccajas_depositos", "ccajas_extracciones",
-                              "Master_delinquency", "Master_mpagosdolares", "catm_trx", "mttarjeta_master_debitos_automaticos", "Visa_madelantopesos",
-                              "catm_trx_other", "cforex_sell", "ctarjeta_master_debitos_automaticos", "mcaja_ahorro_adicional",
-                              "cseguro_accidentes_personales", "Master_cadelantosefectivo", "Visa_cadelantosefectivo", "cseguro_vivienda",
-                              "cinversion2", "cforex", "Master_mpagado", "ccheques_depositados", "tpaquete3", "Master_madelantopesos", "tpaquete4")   #aqui van las columnas que se quieren eliminar
+# palancas$variablesdrift  <- c("mplazo_fijo_dolares", "cplazo_fijo", "Master_msaldototal", "ctransferencias_recibidas", "Visa_mconsumototal",
+#                               "ctransferencias_emitidas", "Master_mpagominimo", "Visa_delinquency", "Master_mpagospesos",
+#                               "cliente_vip", "cpagomiscuentas", "ccajas_consultas", "ctarjeta_debito", "internet", "mextraccion_autoservicio",
+#                               "ctarjeta_visa_debitos_automaticos", "cextraccion_autoservicio", "ccajas_otras", "ctarjeta_master_transacciones",
+#                               "Visa_mpagosdolares", "ccuenta_debitos_automaticos", "Master_mconsumospesos", "Visa_mpagado", "ccajas_transacciones",
+#                               "matm", "Master_mconsumototal", "mforex_sell", "cseguro_vida", "tcuentas", "Visa_msaldodolares",
+#                               "Master_mconsumosdolares", "active_quarter", "matm_other", "Master_cconsumos", "ccajas_depositos", "ccajas_extracciones",
+#                               "Master_delinquency", "Master_mpagosdolares", "catm_trx", "mttarjeta_master_debitos_automaticos", "Visa_madelantopesos",
+#                               "catm_trx_other", "cforex_sell", "ctarjeta_master_debitos_automaticos", "mcaja_ahorro_adicional",
+#                               "cseguro_accidentes_personales", "Master_cadelantosefectivo", "Visa_cadelantosefectivo", "cseguro_vivienda",
+#                               "cinversion2", "cforex", "Master_mpagado", "ccheques_depositados", "tpaquete3", "Master_madelantopesos", "tpaquete4")   #aqui van las columnas que se quieren eliminar
 
-palancas$corregir <-  TRUE    # TRUE o FALSE
+
+palancas$corregir <-  FALSE    # TRUE o FALSE
 
 palancas$nuevasvars <-  FALSE  #si quiero hacer Feature Engineering manual
 
 palancas$dummiesNA  <-  FALSE #La idea de Santiago Dellachiesa
 
-palancas$lag1   <- TRUE    #lag de orden 1
-palancas$delta1 <- TRUE    # campo -  lag de orden 1 
-palancas$lag2   <- TRUE
-palancas$delta2 <- TRUE
-palancas$lag3   <- TRUE
-palancas$delta3 <- TRUE
-palancas$lag4   <- TRUE
-palancas$delta4 <- TRUE
-palancas$lag5   <- TRUE
-palancas$delta5 <- TRUE
+palancas$lag1   <- FALSE    #lag de orden 1
+palancas$delta1 <- FALSE    # campo -  lag de orden 1 
+palancas$lag2   <- FALSE
+palancas$delta2 <- FALSE
+palancas$lag3   <- FALSE
+palancas$delta3 <- FALSE
+palancas$lag4   <- FALSE
+palancas$delta4 <- FALSE
+palancas$lag5   <- FALSE
+palancas$delta5 <- FALSE
 palancas$lag6   <- FALSE
 palancas$delta6 <- FALSE
 
@@ -72,7 +73,7 @@ palancas$ratiomean6  <- FALSE   #Un derivado de la idea de Daiana Sparta
 palancas$tendencia6  <- FALSE    #Great power comes with great responsability
 
 
-palancas$canaritosimportancia  <- FALSE  #si me quedo solo con lo mas importante de canaritosimportancia
+palancas$canaritosimportancia  <- TRUE  #si me quedo solo con lo mas importante de canaritosimportancia
 
 
 #escribo para saber cuales fueron los parametros
@@ -612,8 +613,11 @@ CanaritosImportancia  <- function( dataset )
 correr_todo  <- function( palancas )
 {
   #cargo el dataset ORIGINAL
-  dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
-
+  #------------------------------------------------------------
+  #dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
+  dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
+  #------------------------------------------------------------
+  
   setorder(  dataset, numero_de_cliente, foto_mes )  #ordeno el dataset
 
   AgregarMes( dataset )  #agrego el mes del año
