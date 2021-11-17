@@ -52,7 +52,7 @@ kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es pa
 
 kscript         <- "962_epic"
 
-karch_dataset    <- "./datasets/dataset_epic_v952_exp11_8.csv.gz"
+karch_dataset    <- "./datasets/dataset_epic_v952_exp12.csv.gz"
 
 kapply_mes       <- c(202101)  #El mes donde debo aplicar el modelo
 
@@ -70,13 +70,13 @@ kgen_mes_hasta    <- 202011   #La generacion final para Kaggle, sin undersamplin
 kgen_mes_desde    <- 201901
 
 
-kBO_iter    <-  100   #cantidad de iteraciones de la Optimizacion Bayesiana
+kBO_iter    <-  150   #cantidad de iteraciones de la Optimizacion Bayesiana
 
 #Aqui se cargan los hiperparametros
 hs <- makeParamSet( 
-         makeNumericParam("learning_rate",    lower=    0.02 , upper=    0.1),
+         makeNumericParam("learning_rate",    lower=    0.02 , upper=    1.0),
          makeNumericParam("feature_fraction", lower=    0.1  , upper=    1.0),
-         makeIntegerParam("min_data_in_leaf", lower=  200L   , upper= 8000L),
+         makeIntegerParam("min_data_in_leaf", lower=  10L   , upper= 8000L),
          makeIntegerParam("num_leaves",       lower=  100L   , upper= 1024L)
         )
 
