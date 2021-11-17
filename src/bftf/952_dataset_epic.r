@@ -23,8 +23,8 @@ setwd( directory.root )
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
 #palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
-#palancas$version  <- "v952_reduccion_3" #lags y deltas de 1 a 4 + variables del profe.
-palancas$version  <- "v952_reduccion_4" #solo correccion, nuevas variables, canaritos
+#palancas$version  <- "v952_reduccion_3" #lags y deltas de 1 a 4 + variables del profe (muy grande!159 gigas)
+palancas$version  <- "v952_mini1_exp9_6" 
 
 palancas$variablesdrift  <- c()
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
@@ -41,9 +41,9 @@ palancas$variablesdrift  <- c()
 #                               "cinversion2", "cforex", "Master_mpagado", "ccheques_depositados", "tpaquete3", "Master_madelantopesos", "tpaquete4")   #aqui van las columnas que se quieren eliminar
 
 
-palancas$corregir <-  TRUE    # TRUE o FALSE
+palancas$corregir <-  FALSE    # TRUE o FALSE
 
-palancas$nuevasvars <-  TRUE  #si quiero hacer Feature Engineering manual
+palancas$nuevasvars <-  FALSE  #si quiero hacer Feature Engineering manual
 
 palancas$dummiesNA  <-  FALSE #La idea de Santiago Dellachiesa
 
@@ -616,10 +616,8 @@ correr_todo  <- function( palancas )
 {
   #cargo el dataset ORIGINAL
   #------------------------------------------------------------
-  dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
-  #dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
-  #dataset  <- fread( "./datasets/dataset_epic_v952_reduccion_2.csv.gz")
-  
+  #dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
+  dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
   #------------------------------------------------------------
   
   setorder(  dataset, numero_de_cliente, foto_mes )  #ordeno el dataset
