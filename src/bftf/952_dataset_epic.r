@@ -23,8 +23,7 @@ setwd( directory.root )
 palancas  <- list()  #variable con las palancas para activar/desactivar
 
 #palancas$version  <- "v952_exp11_8"   #Muy importante, ir cambiando la version
-#palancas$version  <- "v952_reduccion_3" #lags y deltas de 1 a 4 + variables del profe (muy grande!159 gigas)
-palancas$version  <- "v952_exp12" 
+palancas$version  <- "v952_exp13" 
 
 palancas$variablesdrift  <- c()
 #Se incluye columnas a sacar relacionadas con la  "importancia de variables".
@@ -636,8 +635,8 @@ correr_todo  <- function( palancas )
   #cargo el dataset ORIGINAL
   #------------------------------------------------------------
   #dataset  <- fread( "./datasetsOri/paquete_premium.csv.gz")
-  #dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
-  dataset  <- fread( "./datasets/dataset_epic_v952_mini1_exp9_6.csv.gz")
+  dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz")
+  #dataset  <- fread( "./datasets/dataset_epic_v952_mini1_exp9_6.csv.gz")
   #------------------------------------------------------------
   
   setorder(  dataset, numero_de_cliente, foto_mes )  #ordeno el dataset
