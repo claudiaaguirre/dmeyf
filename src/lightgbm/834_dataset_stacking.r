@@ -10,7 +10,16 @@ gc()             #garbage collection
 
 require("data.table")
 
-setwd("~/buckets/b1/crudoB/" )
+#para poder usarlo en la PC y en la nube sin tener que cambiar la ruta
+#cambiar aqui las rutas en su maquina
+switch ( Sys.info()[['sysname']],
+         Windows = { directory.root  <-  "M:\\" },   #Windows
+         Darwin  = { directory.root  <-  "~/dm/" },  #Apple MAC
+         Linux   = { directory.root  <-  "~/buckets/b1/" } #Google Cloud
+)
+#defino la carpeta donde trabajo
+setwd( directory.root )
+#setwd("~/buckets/b1/crudoB/" )
 
 version  <- "v001"  #cambiar cada vez, asi se tiene versionado del dataset
 
