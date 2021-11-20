@@ -14,7 +14,7 @@ setwd("~/buckets/b1/crudoB/" )
 
 version  <- "v001"  #cambiar cada vez, asi se tiene versionado del dataset
 
-dataset  <- fread( "./datasets/dataset_epic_simple_v007.csv.gz" )
+dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz" )
 dataset  <- copy(  dataset[  , c("numero_de_cliente","foto_mes","clase_ternaria"),  with=FALSE] )
 gc()
 
