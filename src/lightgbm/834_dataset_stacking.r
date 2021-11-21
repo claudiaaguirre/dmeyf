@@ -21,10 +21,10 @@ switch ( Sys.info()[['sysname']],
 setwd( directory.root )
 #setwd("~/buckets/b1/crudoB/" )
 
-version  <- "v001"  #cambiar cada vez, asi se tiene versionado del dataset
+version  <- "v002"  #cambiar cada vez, asi se tiene versionado del dataset
 
 dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz" )
-dataset  <- copy(  dataset[  , c("numero_de_cliente","foto_mes","clase_ternaria"),  with=FALSE] )
+#dataset  <- copy(  dataset[  , c("numero_de_cliente","foto_mes","clase_ternaria"),  with=FALSE] )
 gc()
 
 
