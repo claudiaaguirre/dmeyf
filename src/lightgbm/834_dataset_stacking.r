@@ -3,6 +3,10 @@
 #256 GB de espacio en el disco local
 #4 vCPU
 
+#128 GB de memoria RAM
+#256 GB de espacio en el disco local
+#8 vCPU
+
 #Lo agrego yo (como el 962):
 #Necesita para correr en Google Cloud
 #256 GB de memoria RAM

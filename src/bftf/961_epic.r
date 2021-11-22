@@ -45,7 +45,7 @@ kexperimento  <- NA   #NA si se corre la primera vez, un valor concreto si es pa
 
 kscript         <- "961_epic"
 
-karch_dataset    <- "./datasets/dataset_epic_v951.csv.gz"
+karch_dataset    <- "./datasets/dataset_epic_v952.csv.gz"
 
 kapply_mes       <- c(202101)  #El mes donde debo aplicar el modelo
 
@@ -67,10 +67,12 @@ kBO_iter    <-  100   #cantidad de iteraciones de la Optimizacion Bayesiana
 
 #Aqui se cargan los hiperparametros
 hs <- makeParamSet( 
-         makeNumericParam("learning_rate",    lower=    0.02 , upper=    0.1),
-         makeNumericParam("feature_fraction", lower=    0.1  , upper=    1.0),
-         makeIntegerParam("min_data_in_leaf", lower=  200L   , upper= 8000L),
-         makeIntegerParam("num_leaves",       lower=  100L   , upper= 1024L)
+         #makeNumericParam("learning_rate",    lower=    0.02 , upper=    0.1),
+         #makeNumericParam("feature_fraction", lower=    0.1  , upper=    1.0),
+         #makeIntegerParam("min_data_in_leaf", lower=  200L   , upper= 8000L),
+         #makeIntegerParam("num_leaves",       lower=  100L   , upper= 1024L),
+         makeNumericParam("lambda_l1",    lower= 0.00 , upper=    250.0),
+         makeNumericParam("lambda_l2",    lower= 0.00 , upper=    250.0)
         )
 
 campos_malos  <- c()   #aqui se deben cargar todos los campos culpables del Data Drifting
@@ -296,12 +298,16 @@ EstimarGanancia_lightgbm  <- function( x )
                           seed= 999983,
                           max_depth=  -1,         # -1 significa no limitar,  por ahora lo dejo fijo
                           min_gain_to_split= 0.0, #por ahora, lo dejo fijo
-                          lambda_l1= 0.0,         #por ahora, lo dejo fijo
-                          lambda_l2= 0.0,         #por ahora, lo dejo fijo
+                          #lambda_l1= 0.0,         #por ahora, lo dejo fijo
+                          #lambda_l2= 0.0,         #por ahora, lo dejo fijo
                           max_bin= 31,            #por ahora, lo dejo fijo
-                          num_iterations= 9999,   #un numero muy grande, lo limita early_stopping_rounds
-                          force_row_wise= TRUE    #para que los alumnos no se atemoricen con tantos warning
-                        )
+                          num_iterations= 87,   #un numero muy grande, lo limita early_stopping_rounds
+                          force_row_wise= TRUE,    #para que los alumnos no se atemoricen con tantos warning
+                          learning_rate = 0.0779374062406458,
+                          feature_fraction = 0.341383242442389,
+                          min_data_in_leaf = 2817,
+                          num_leaves = 557
+                          )
 
   #el parametro discolo, que depende de otro
   param_variable  <- list(  early_stopping_rounds= as.integer(50 + 1/x$learning_rate) )
