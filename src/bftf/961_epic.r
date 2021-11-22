@@ -310,8 +310,8 @@ EstimarGanancia_lightgbm  <- function( x )
                           )
 
   #el parametro discolo, que depende de otro
-  param_variable  <- list(  early_stopping_rounds= as.integer(50 + 1/x$learning_rate) )
-
+  #param_variable  <- list(  early_stopping_rounds= as.integer(50 + 1/x$learning_rate) )
+  param_variable  <- list(  early_stopping_rounds= as.integer(62.831) )
   param_completo  <- c( param_basicos, param_variable, x )
 
   VPOS_CORTE  <<- c()
