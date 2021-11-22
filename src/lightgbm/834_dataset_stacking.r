@@ -28,7 +28,7 @@ setwd( directory.root )
 
 version  <- "v003"  #cambiar cada vez, asi se tiene versionado del dataset
 
-dataset  <- fread( "./datasets/dataset_epic_v952.csv.gz" )
+dataset  <- fread( "./datasets/semillerio_dataset_lag1.csv.gz" )
 #dataset  <- copy(  dataset[  , c("numero_de_cliente","foto_mes","clase_ternaria"),  with=FALSE] )
 gc()
 
