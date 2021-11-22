@@ -3,6 +3,11 @@
 #256 GB de espacio en el disco local
 #4 vCPU
 
+#Lo agrego yo (como el 962):
+#Necesita para correr en Google Cloud
+#256 GB de memoria RAM
+#512 GB de espacio en el disco local
+#8 vCPU
 
 #limpio la memoria
 rm( list=ls() )  #remove all objects
@@ -21,9 +26,9 @@ switch ( Sys.info()[['sysname']],
 setwd( directory.root )
 #setwd("~/buckets/b1/crudoB/" )
 
-version  <- "v002"  #cambiar cada vez, asi se tiene versionado del dataset
+version  <- "v003"  #cambiar cada vez, asi se tiene versionado del dataset
 
-dataset  <- fread( "./datasets/dataset_epic_v952_exp9_6.csv.gz" )
+dataset  <- fread( "./datasets/dataset_epic_v952.csv.gz" )
 #dataset  <- copy(  dataset[  , c("numero_de_cliente","foto_mes","clase_ternaria"),  with=FALSE] )
 gc()
 

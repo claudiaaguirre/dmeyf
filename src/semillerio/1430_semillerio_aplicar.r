@@ -1,3 +1,8 @@
+# Agregado por mi:
+#32 GB de memoria RAM
+#256 GB de espacio en el disco local
+#8 vCPU
+
 #limpio la memoria
 rm( list=ls() )  #remove all objects
 gc()             #garbage collection
@@ -21,7 +26,7 @@ x$gleaf_size   <-  64.1490992717445
 x$gnum_leaves  <-  0.657155239759595
 x$learning_rate <-  0.158717230118345
 x$feature_fraction <- 0.652636210202763 
-x$num_iterations  <- 92.4
+x$num_iterations  <- 92 #92.4
 
 #------------------------------------------------------------------------------
 
