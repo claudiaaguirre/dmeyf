@@ -63,7 +63,7 @@ kgen_mes_hasta    <- 202011   #La generacion final para Kaggle, sin undersamplin
 kgen_mes_desde    <- 201901
 
 
-kBO_iter    <-  100   #cantidad de iteraciones de la Optimizacion Bayesiana
+kBO_iter    <-  50   #cantidad de iteraciones de la Optimizacion Bayesiana
 
 #Aqui se cargan los hiperparametros
 hs <- makeParamSet( 
@@ -311,8 +311,9 @@ EstimarGanancia_lightgbm  <- function( x )
 
   #el parametro discolo, que depende de otro
   #param_variable  <- list(  early_stopping_rounds= as.integer(50 + 1/x$learning_rate) )
-  param_variable  <- list(  early_stopping_rounds= as.integer(62.831) )
-  param_completo  <- c( param_basicos, param_variable, x )
+  #param_variable  <- list(  early_stopping_rounds= as.integer(62.831) )
+  #param_completo  <- c( param_basicos, param_variable, x )
+  param_completo  <- c( param_basicos, x)
 
   VPOS_CORTE  <<- c()
   set.seed( 999983 )
@@ -336,7 +337,7 @@ EstimarGanancia_lightgbm  <- function( x )
   attr(ganancia,"extras" )  <- list("num_iterations"= modelo$best_iter)  #esta es la forma de devolver un parametro extra
 
   param_final  <- copy( param_completo )
-  param_final["early_stopping_rounds"]  <- NULL
+  #param_final["early_stopping_rounds"]  <- NULL
   param_final$num_iterations <- modelo$best_iter  #asigno el mejor num_iterations
   param_final$ratio_corte  <- VPOS_CORTE[ modelo$best_iter ] / nrow( dvalid )
 
