@@ -19,14 +19,17 @@ ksalida  <- "semillerio"
 
 kcantidad_semillas  <- 200
 
+kexperimento = 5017 #Para que se guarde en la carpeta correcta.
+
 #ATENCION
 #aqui deben ir los mejores valores que salieron de la optimizacion bayesiana
+#Experimento 14 - E5017
 x  <- list()
-x$gleaf_size   <-  64.1490992717445
-x$gnum_leaves  <-  0.657155239759595
-x$learning_rate <-  0.158717230118345
-x$feature_fraction <- 0.652636210202763 
-x$num_iterations  <- 92 #92.4
+x$gleaf_size   <-  68.3777244890388
+x$gnum_leaves  <-  0.167015447961386
+x$learning_rate <-  0.0503834135449756
+x$feature_fraction <- 0.712226140119463
+x$num_iterations  <- 426
 
 #------------------------------------------------------------------------------
 
@@ -141,8 +144,12 @@ for( semilla in  ksemillas)
                                      "prob"= tb_predicciones$predicciones_acumuladas ) ) #genero la salida
 
     setorder( entrega, -prob )
-
-
+    
+    #############
+    #kexperimento = 5028
+    dir.create( paste0( "./kaggle/Semi",  kexperimento, "/" ) )  
+    #############
+   
     for(  corte  in seq( 10000, 15000, 1000) ) #imprimo cortes en 10000, 11000, 12000, 13000, 14000 y 15000
     {
       entrega[ ,  Predicted := 0L ]
@@ -150,7 +157,7 @@ for( semilla in  ksemillas)
 
       #genero el archivo para Kaggle
       fwrite( entrega[ , c("numero_de_cliente","Predicted"), with=FALSE], 
-              file=  paste0( "./kaggle/" , ksalida, "_", isemilla,"_",corte, ".csv" ),  
+              file=  paste0( "./kaggle/Semi",  kexperimento, "/S", ksalida, "_", isemilla,"_",corte, ".csv" ),  
               sep= "," )
     }
   }
