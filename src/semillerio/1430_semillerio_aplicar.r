@@ -1,5 +1,5 @@
 # Agregado por mi:
-#32 GB de memoria RAM
+#64 GB de memoria RAM
 #256 GB de espacio en el disco local
 #8 vCPU
 
@@ -150,7 +150,7 @@ for( semilla in  ksemillas)
     dir.create( paste0( "./kaggle/Semi",  kexperimento, "/" ) )  
     #############
    
-    for(  corte  in seq( 10000, 15000, 1000) ) #imprimo cortes en 10000, 11000, 12000, 13000, 14000 y 15000
+    for(  corte  in seq( 10000, 15000, 500) ) #imprimo cortes en 10000, 11000, 12000, 13000, 14000 y 15000
     {
       entrega[ ,  Predicted := 0L ]
       entrega[ 1:corte,  Predicted := 1L ]  #me quedo con los primeros
