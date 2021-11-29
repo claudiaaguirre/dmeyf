@@ -14,22 +14,22 @@ require("primes")
 
 setwd("~/buckets/b1/")
 
-karch_dataset  <- "./datasets/semillerio_dataset_lag1.csv.gz"
+karch_dataset  <- "./datasets/dataset_epic_v952_exp12.csv.gz"
 ksalida  <- "semillerio" 
 
 kcantidad_semillas  <- 200
 
-kexperimento = 5017 #Para que se guarde en la carpeta correcta.
+kexperimento = 5029 #Para que se guarde en la carpeta correcta.
 
 #ATENCION
 #aqui deben ir los mejores valores que salieron de la optimizacion bayesiana
 #Experimento 14 - E5017
 x  <- list()
-x$gleaf_size   <-  68.3777244890388
-x$gnum_leaves  <-  0.167015447961386
-x$learning_rate <-  0.0503834135449756
-x$feature_fraction <- 0.712226140119463
-x$num_iterations  <- 426
+x$gleaf_size   <-  44.3506550749333
+x$gnum_leaves  <-  0.994057283136793
+x$learning_rate <-  0.0591635747821818
+x$feature_fraction <- 0.43358925145995
+x$num_iterations  <- 407 #407.5
 
 #------------------------------------------------------------------------------
 
