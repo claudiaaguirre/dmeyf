@@ -25,13 +25,13 @@ kcantidad_semillas  <- 200
 #ATENCION
 #aqui deben ir los mejores valores que salieron de la optimizacion bayesiana
 x  <- list()
-x$gleaf_size   <-  
-x$gnum_leaves  <-  
-x$learning_rate <-  
-x$feature_fraction <-  
-x$max_bin  <-  
-x$num_iterations  <-   
-x$pos_ratio  <- 
+x$gleaf_size   <- 87.9427293354011 
+x$gnum_leaves  <- 0.0107700907972421 
+x$learning_rate <- 0.0370335247809192 
+x$feature_fraction <- 0.425599273789018  
+x$max_bin  <- 43 
+x$num_iterations  <- 577   #577.3
+x$pos_ratio  <- 0.0398684441766463
 
 
 #------------------------------------------------------------------------------
@@ -187,7 +187,7 @@ for( semilla in  ksemillas)
 
 
 
-    for(  corte  in seq( 11000, 14000, 1000) ) #imprimo cortes en 10000, 11000, 12000, 13000, 14000 y 15000
+    for(  corte  in seq( 10000, 15000, 500) ) #imprimo cortes en 10000, 11000, 12000, 13000, 14000 y 15000
     {
       entrega[ ,  Predicted := 0L ]
       entrega[ 1:corte,  Predicted := 1L ]  #me quedo con los primeros
